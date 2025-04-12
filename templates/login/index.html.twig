@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>S'inscrire</title>
+    <title>Se connecter</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
 
     {% block javascripts %}
@@ -13,34 +13,30 @@
 </head>
 <body>
     <div class="container mt-5">
-        {{ form_start(form, { 'attr': { 'class': 'row justify-content-center' } }) }}
+        <form class="row justify-content-center" method="post">
             <div class="col-md-6 col-sm-12 mb-3">
                 <div class="card">
                     <div class="card-body">
-                        <h1 class="h3 mb-3 fw-bold text-center">S'inscrire</h1>
+                        <h1 class="h3 mb-3 fw-bold text-center">Se connecter</h1>
 
                         <div class="form-floating mb-3">
-                            {{ form_widget(form.username) }}
-                            {{ form_label(form.username) }}
+                            <input type="text" class="form-control" name="_username" id="inputEmail" placeholder="Nom d'utilisateur" value="{{ last_username }}">
+                            <label for="inputEmail">Nom d'utilisateur</label>
                         </div>
                         <div class="form-floating mb-3">
-                            {{ form_widget(form.password.first) }}
-                            {{ form_label(form.password.first) }}
-                        </div>
-                        <div class="form-floating mb-3">
-                            {{ form_widget(form.password.second) }}
-                            {{ form_label(form.password.second) }}
+                            <input type="password" class="form-control" name="_password" id="inputPassword" placeholder="Mot de passe">
+                            <label for="inputPassword">Mot de passe</label>
                         </div>
 
-                        {{ form_widget(form.submit) }}
+                        <button class="w-100 btn btn-lg btn-primary" type="submit">Se connecter</button>
 
                         <p class="my-3 text-muted">
-                            Vous avez déjà un compte ? <a class="text-decoration-none" href="{{ path('login_index') }}">Se connecter</a>
+                            Vous n'avez pas de compte ? <a class="text-decoration-none" href="{{ path('register_index') }}">S'inscrire</a>
                         </p>
                     </div>
                 </div>
             </div>
-        {{ form_end(form) }}
+        </form>
     </div>
 </body>
 </html>

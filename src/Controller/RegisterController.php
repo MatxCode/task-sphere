@@ -17,7 +17,7 @@ class RegisterController extends AbstractController
     {
     }
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/register', name: 'register_index')]
     public function index(Request $request): Response
     {
         $form = $this

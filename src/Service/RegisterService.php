@@ -19,8 +19,6 @@ class RegisterService
     {
         $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPassword()));
 
-        dd($user);
-
         $this->em->persist($user);
         $this->em->flush();
     }
