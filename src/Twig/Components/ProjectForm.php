@@ -38,11 +38,13 @@ class ProjectForm extends AbstractController
         /** @var Project $project */
         $project = $this->getForm()->getData();
 
+        dd($project);
+
         $em->persist($project);
         $em->flush();
 
         return $this->redirectToRoute('project_show', [
-            'keyCode' => $project->getKeyCode(),
+            'keyCode' => $project->getKeyCode()
         ]);
     }
 }

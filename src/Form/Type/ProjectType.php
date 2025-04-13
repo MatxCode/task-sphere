@@ -5,6 +5,7 @@ namespace App\Form\Type;
 use App\Entity\Project;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -13,6 +14,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProjectType extends AbstractType
 {
+    public function __construct(
+        private readonly Security $security
+    ){
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -27,6 +33,7 @@ class ProjectType extends AbstractType
                     'class' => 'd-none',
                 ],
                 'label' => false,
+                'data' => $this->security->getUser(),
                 'class' => User::class,
             ])
             ->add('submit', SubmitType::class, [
