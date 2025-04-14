@@ -1,9 +1,7 @@
 <div {{ attributes }}>
     {{ form_start(form, {
-        attr: {
-            'data-action': 'live#action:prevent',
-            'data-live-action-param': 'save'
-        }
+        'action': path('project_create'),
+        'method': 'POST'
     }) }}
     <div class="modal-body">
         {{ form_row(form.name) }}

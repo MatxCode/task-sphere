@@ -32,9 +32,9 @@ class ProjectType extends AbstractType
                 'attr' => [
                     'class' => 'd-none',
                 ],
-                'label' => false,
-                'data' => $this->security->getUser(),
                 'class' => User::class,
+                'data' => $this->security->getUser(),
+                'label' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Créer un projet',
