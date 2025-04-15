@@ -1,11 +1,15 @@
 <div {{ attributes }}>
     {{ form_start(form, {
-        'action': path('project_create'),
+        'action': path('issue_create'),
         'method': 'POST'
     }) }}
     <div class="modal-body">
-        {{ form_row(form.name) }}
-        {{ form_row(form.keyCode) }}
+        {{ form_row(form.project) }}
+        {{ form_row(form.type) }}
+        {{ form_row(form.status) }}
+        {{ form_row(form.summary) }}
+        {{ form_row(form.assignee) }}
+        {{ form_row(form.reporter) }}
     </div>
     <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

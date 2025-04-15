@@ -49,6 +49,7 @@ class ProjectController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
             $user->addProject($project);
+            $user->setSelectedProject($project);
             $em->flush();
 
             return $this->redirectToRoute('project_show', [
