@@ -59,4 +59,21 @@ class ProjectController extends AbstractController
         // Gestion des erreurs
         dd($form->getErrors(true));
     }
+
+    #[Route('/project/{keyCode}/delete', name: 'project_delete', methods: ['POST'])]
+    public function delete(Request $request, string $keyCode, ProjectService $projectService): Response
+    {
+        $project = $projectService->findOneByKeyCode($keyCode);
+
+        if (!$project) {
+            throw $this->createNotFoundException('Project not found');
+        }
+
+        if ($this->isCsrfTokenValid('delete'.$keyCode, $request->request->get('_token'))) {
+            $projectService->remove($project);
+            $this->addFlash('success', 'Project deleted successfully');
+        }
+
+        return $this->redirectToRoute('project_list');
+    }
 }

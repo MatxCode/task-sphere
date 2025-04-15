@@ -23,14 +23,12 @@
                         <td>{{ project.name }}</td>
                         <td>{{ project.keyCode }}</td>
                         <td>{{ project.lead }}</td>
-                        <td>
-                            <a class="btn btn-primary" href="{{ path('project_show', { 'keyCode': project.keyCode }) }}">Voir</a>
-                            <button class="btn btn-sm btn-danger"
-                                    data-action="live#action:prevent"
-                                    data-live-action-param
-                            >
-                                Supprimer
-                            </button>
+                        <td class="hstack gap-3 text-center">
+                            <a class="btn btn-sm btn-primary" href="{{ path('project_show', { 'keyCode': project.keyCode }) }}">Voir</a>
+                            <form method="post" action="{{ path('project_delete', {'keyCode': project.keyCode}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?');" style="display: inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ project.keyCode) }}">
+                                <button class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}
