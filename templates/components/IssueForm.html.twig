@@ -1,0 +1,15 @@
+<div {{ attributes }}>
+    {{ form_start(form, {
+        'action': path('project_create'),
+        'method': 'POST'
+    }) }}
+    <div class="modal-body">
+        {{ form_row(form.name) }}
+        {{ form_row(form.keyCode) }}
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        {{ form_widget(form.submit) }}
+    </div>
+    {{ form_end(form) }}
+</div>
