@@ -45,6 +45,9 @@ class Issue
     #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'issue')]
     private Collection $attachments;
 
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $status = null;
+
     public function __construct()
     {
         $this->attachments = new ArrayCollection();
@@ -165,6 +168,18 @@ class Issue
                 $attachment->setIssue(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
