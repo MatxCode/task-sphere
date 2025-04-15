@@ -1,0 +1,40 @@
+<div {{ attributes }}>
+    {% if projects|length == 0 %}
+        <div class="mt-5 text-center">
+            <h5 class="fw-bold">Vous n'avez actuellement aucun projet</h5>
+            <p>Créez votre premier projet dans TaskSphere</p>
+            <button class="btn btn-primary" data-bs-target="#modalCreateProject" data-bs-toggle="modal">
+                Créer un projet
+            </button>
+        </div>
+    {% else %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="w-50">Nom</th>
+                    <th class="w-25">Clé</th>
+                    <th class="w-25">Response</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                    <tr>
+                        <td>{{ project.name }}</td>
+                        <td>{{ project.keyCode }}</td>
+                        <td>{{ project.lead }}</td>
+                        <td>
+                            <a class="btn btn-primary" href="{{ path('project_show', { 'keyCode': project.keyCode }) }}">Voir</a>
+                            <button class="btn btn-sm btn-danger"
+                                    data-action="live#action:prevent"
+                                    data-live-action-param
+                            >
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>

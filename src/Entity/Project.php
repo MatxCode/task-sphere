@@ -15,9 +15,11 @@ class Project
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
     #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 5)]
     #[ORM\Column(length: 5)]

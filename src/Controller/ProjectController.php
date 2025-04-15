@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Project;
+use App\Entity\User;
 use App\Form\Type\ProjectType;
+use App\Service\ProjectService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,11 +14,24 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ProjectController extends AbstractController
 {
+    public function __construct(
+        private readonly ProjectService $projectService,
+    ){
+    }
+
     #[Route('/projects/{keyCode}', name: 'project_show')]
     public function show(?Project $project): Response
     {
-        return $this->render('project/index.html.twig', [
-            'controller_name' => 'ProjectController',
+        return $this->render('project/show.html.twig', [
+            'project' => $project,
+        ]);
+    }
+
+    #[Route('/projects', name: 'project_list')]
+    public function list(): Response
+    {
+        return $this->render('project/list.html.twig', [
+            'projects' => $this->projectService->getProjectsList($this->getUser()),
         ]);
     }
 
@@ -30,6 +45,10 @@ class ProjectController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $project->setLeadUser($this->getUser());
             $em->persist($project);
+
+            /** @var User $user */
+            $user = $this->getUser();
+            $user->addProject($project);
             $em->flush();
 
             return $this->redirectToRoute('project_show', [
