@@ -3,10 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Issue;
-use App\Entity\Project;
-use App\Entity\User;
 use App\Form\Type\IssueType;
-use App\Form\Type\ProjectType;
 use App\Service\ProjectService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +16,10 @@ class IssueController extends AbstractController
     #[Route('/issues/{id}', name: 'issue_show')]
     public function show(?Issue $issue): Response
     {
+        if(!$issue)
+        {
+            return $this->redirectToRoute('issue_list');
+        }
         return $this->render('issue/show.html.twig', [
             'issue' => $issue,
         ]);

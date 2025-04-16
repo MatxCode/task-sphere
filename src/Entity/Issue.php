@@ -50,6 +50,8 @@ class Issue
     #[ORM\Column(type: Types::SMALLINT, enumType: IssueStatus::class)]
     private ?IssueStatus $status = null;
 
+    private ?string $keyCode = null;
+
     public function __construct()
     {
         $this->attachments = new ArrayCollection();
@@ -184,5 +186,10 @@ class Issue
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getKeyCode(): ?string
+    {
+        return $this->project->getKeyCode() . '-' . $this->id;
     }
 }
