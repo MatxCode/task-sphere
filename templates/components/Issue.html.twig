@@ -48,6 +48,46 @@
                 Enregistrer
             </button>
         </div>
+
+        <p class="fw-bold card-text">Pièces jointes</p>
+
+        <hr>
+
+        <div class="input-group mb-3">
+            <input type="file" class="form-control" name="attachment">
+            <button class="btn btn-outline-primary"
+                    data-action="live#action"
+                    data-live-action-param="files(attachment)|addAttachment"
+            >
+                Joindre
+            </button>
+        </div>
+
+        <div class="overflow-x-auto container-fluid">
+            <div class="flex-row flex-nowrap mb-3 row">
+                {% for attachment in attachments %}
+                    <div class="col-sm-4">
+                        <div class="card h-100">
+                            <a href="{{ asset(attachment.path) }}" target="_blank">
+                                <div class="card-body">
+                                    <small>{{ attachment.originalName }}</small>
+                                </div>
+                            </a>
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-danger"
+                                        data-action="live#action"
+                                        data-live-action-param="deleteAttachment"
+                                        data-live-id-param="{{ attachment.id }}"
+                                >
+                                    Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
 </div>
 

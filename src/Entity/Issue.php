@@ -45,7 +45,7 @@ class Issue
     /**
      * @var Collection<int, Attachment>
      */
-    #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'issue')]
+    #[ORM\OneToMany(targetEntity: Attachment::class, mappedBy: 'issue', orphanRemoval: true)]
     private Collection $attachments;
 
     #[ORM\Column(type: Types::SMALLINT, enumType: IssueStatus::class)]
