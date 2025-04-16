@@ -68,4 +68,24 @@ class IssueController extends AbstractController
 
         return $this->redirectToRoute('project_list');
     }
+
+    #[Route('/issue/{id}/update-summary', name: 'issue_update_summary', methods: ['POST'])]
+    public function updateSummary(Request $request, Issue $issue, EntityManagerInterface $em): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $issue->setSummary($data['summary'] ?? '');
+        $em->flush();
+
+        return $this->json(['success' => true, 'summary' => $issue->getSummary()]);
+    }
+
+    #[Route('/issue/{id}/update-description', name: 'issue_update_description', methods: ['POST'])]
+    public function updateDescription(Request $request, Issue $issue, EntityManagerInterface $em): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $issue->setDescription($data['description'] ?? '');
+        $em->flush();
+
+        return $this->json(['success' => true, 'description' => $issue->getDescription()]);
+    }
 }

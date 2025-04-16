@@ -1,59 +1,98 @@
-<div {{ attributes }}>
-    <div class="card">
-        <div class="card-header">{{ issue.keyCode }}</div>
+<div class="card">
+    <div class="card-header">{{ issue.keyCode }}</div>
 
-        <div class="card-body">
-            <div class="card-title">
-                {% if isEditingSummary %}
-                    <div class="input-group">
-                        <input aria-label="Résumé"
-                               type="text"
-                               class="form-control"
-                               value="{{ issue.summary }}"
-                               autofocus
-                        >
-                        <button class="btn btn-outline-primary"
-                                data-action="live#action"
-                                data-live-action-param="saveSummary"
-                        >
-                            Enregistrer
-                        </button>
-                    </div>
-                {% else %}
-                    <a class="h5 text-primary">{{ issue.summary }}</a>
-                    <button class="btn btn-sm btn-outline-primary"
-                            data-action="live#action"
-                            data-live-action-param="activateEditingSummary"
-                    >
-                        Modifier
-                    </button>
-                {% endif %}
+    <div class="card-body">
+        <!-- Résumé -->
+        <div class="card-title">
+            <div id="summary-view" class="{% if false %}d-none{% endif %}">
+                <a class="h5 text-primary" id="summary-display">{{ issue.summary }}</a>
+                <button class="btn btn-sm btn-outline-primary"
+                        onclick="toggleSummaryEdit()">
+                    Modifier
+                </button>
             </div>
 
-            <p class="fw-bold card-text">Description</p>
-
-            <hr>
-
-            {% if isEditingDescription %}
-                <textarea aria-label="Description" class="form-control mb-3" data-model="issue.description">
-                    {{ issue.description }}
-                </textarea>
-                <button class="btn btn-sm btn-outline-primary"
-                        data-action="live#action"
-                        data-live-action-param="saveDescription"
+            <div id="summary-edit" class="input-group d-none">
+                <input aria-label="Résumé"
+                       type="text"
+                       class="form-control"
+                       id="summary-input"
+                       value="{{ issue.summary }}"
+                       autofocus
                 >
+                <button class="btn btn-outline-primary"
+                        onclick="saveSummary({{ issue.id }})">
                     Enregistrer
                 </button>
-            {% else %}
-                <p class="card-text">{{ issue.description }}</p>
-                <button class="btn btn-sm btn-outline-primary"
-                        data-action="live#action"
-                        data-live-action-param="activateEditingDescription"
-                >
-                    Modifier la description
-                </button>
-            {% endif %}
+            </div>
+        </div>
 
+        <p class="fw-bold card-text">Description</p>
+
+        <hr>
+
+        <div id="description-view">
+            <p class="card-text" id="description-display">{{ issue.description }}</p>
+            <button class="btn btn-sm btn-outline-primary"
+                    onclick="toggleDescriptionEdit()">
+                Modifier la description
+            </button>
+        </div>
+
+        <div id="description-edit" class="d-none">
+            <textarea aria-label="Description"
+                      class="form-control mb-3"
+                      id="description-input">{{ issue.description }}</textarea>
+            <button class="btn btn-sm btn-outline-primary"
+                    onclick="saveDescription({{ issue.id }})">
+                Enregistrer
+            </button>
         </div>
     </div>
 </div>
+
+<script>
+    function toggleSummaryEdit() {
+        document.getElementById('summary-view').classList.toggle('d-none');
+        document.getElementById('summary-edit').classList.toggle('d-none');
+    }
+
+    function toggleDescriptionEdit() {
+        document.getElementById('description-view').classList.toggle('d-none');
+        document.getElementById('description-edit').classList.toggle('d-none');
+    }
+
+    function saveSummary(issueId) {
+        const summary = document.getElementById('summary-input').value;
+
+        fetch(`/issue/${issueId}/update-summary`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ summary })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('summary-display').innerText = data.summary;
+                    toggleSummaryEdit();
+                }
+            });
+    }
+
+    function saveDescription(issueId) {
+        const description = document.getElementById('description-input').value;
+
+        fetch(`/issue/${issueId}/update-description`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('description-display').innerText = data.description;
+                    toggleDescriptionEdit();
+                }
+            });
+    }
+</script>
