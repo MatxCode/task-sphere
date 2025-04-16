@@ -1,0 +1,59 @@
+<div {{ attributes }}>
+    <div class="card">
+        <div class="card-header">{{ issue.keyCode }}</div>
+
+        <div class="card-body">
+            <div class="card-title">
+                {% if isEditingSummary %}
+                    <div class="input-group">
+                        <input aria-label="Résumé"
+                               type="text"
+                               class="form-control"
+                               value="{{ issue.summary }}"
+                               autofocus
+                        >
+                        <button class="btn btn-outline-primary"
+                                data-action="live#action"
+                                data-live-action-param="saveSummary"
+                        >
+                            Enregistrer
+                        </button>
+                    </div>
+                {% else %}
+                    <a class="h5 text-primary">{{ issue.summary }}</a>
+                    <button class="btn btn-sm btn-outline-primary"
+                            data-action="live#action"
+                            data-live-action-param="activateEditingSummary"
+                    >
+                        Modifier
+                    </button>
+                {% endif %}
+            </div>
+
+            <p class="fw-bold card-text">Description</p>
+
+            <hr>
+
+            {% if isEditingDescription %}
+                <textarea aria-label="Description" class="form-control mb-3" data-model="issue.description">
+                    {{ issue.description }}
+                </textarea>
+                <button class="btn btn-sm btn-outline-primary"
+                        data-action="live#action"
+                        data-live-action-param="saveDescription"
+                >
+                    Enregistrer
+                </button>
+            {% else %}
+                <p class="card-text">{{ issue.description }}</p>
+                <button class="btn btn-sm btn-outline-primary"
+                        data-action="live#action"
+                        data-live-action-param="activateEditingDescription"
+                >
+                    Modifier la description
+                </button>
+            {% endif %}
+
+        </div>
+    </div>
+</div>

@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: IssueRepository::class)]
 class Issue
 {
@@ -25,7 +25,8 @@ class Issue
     #[ORM\Column(type: Types::SMALLINT, enumType: IssueType::class)]
     private ?IssueType $type = null;
 
-    #[ORM\Column(length: 255)]
+    #[Assert\Length(max : 100)]
+    #[ORM\Column(length: 100)]
     private ?string $summary = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
