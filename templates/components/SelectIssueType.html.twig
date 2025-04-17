@@ -1,5 +1,9 @@
 <div {{ attributes }}>
-    <select>
-
-    </select>
+    <form method="post" action="{{ path('update_issue_type', { id: issue.id }) }}" id="issueTypeForm">
+        <select aria-label="Type" name="type" class="form-select mb-3" onchange="document.getElementById('issueTypeForm').submit()">
+            {% for type in types %}
+                <option value="{{ type.value }}" {% if issue.type == type %}selected{% endif %}>{{ type.label }}</option>
+            {% endfor %}
+        </select>
+    </form>
 </div>

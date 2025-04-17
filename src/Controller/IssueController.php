@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Attachment;
 use App\Entity\Issue;
+use App\Enum\IssueStatus;
 use App\Form\Type\IssueType;
 use App\Service\AttachmentService;
 use App\Service\ProjectService;
@@ -24,6 +25,8 @@ class IssueController extends AbstractController
         }
         return $this->render('issue/show.html.twig', [
             'issue' => $issue,
+            'statuses' => IssueStatus::cases(),
+            'types' => \App\Enum\IssueType::cases(),
         ]);
     }
     #[Route('/issues', name: 'issue_list')]
@@ -107,5 +110,29 @@ class IssueController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('issue_show', ['id' => $issueId]);
+    }
+
+    #[Route('/issue/{id}/update_type', name: 'update_issue_type', methods: ['POST'])]
+    public function updateType(Request $request, Issue $issue, EntityManagerInterface $em): Response
+    {
+        $type = \App\Enum\IssueType::from($request->request->get('type'));
+
+        $issue->setType($type);
+
+        $em->flush();
+
+        return $this->redirectToRoute('issue_show', ['id' => $issue->getId()]);
+    }
+
+    #[Route('/issue/{id}/update_status', name: 'update_issue_status', methods: ['POST'])]
+    public function updateStatus(Request $request, Issue $issue, EntityManagerInterface $em): Response
+    {
+        $status = IssueStatus::from($request->request->get('status'));
+
+        $issue->setStatus($status);
+
+        $em->flush();
+
+        return $this->redirectToRoute('issue_show', ['id' => $issue->getId()]);
     }
 }

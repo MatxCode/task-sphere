@@ -7,12 +7,25 @@
         <div class="row">
             <div class="col-md-8 col-sm-12">
                 {{ component('Issue', {
-                    attachments : issue.attachments.toArray(),
-                    issue : issue
+                    'attachments' : issue.attachments.toArray(),
+                    'issue' : issue
                 }) }}
             </div>
             <div class="col-md-4 col-sm-12">
-{#                {{ component('SelectIssueType') }}#}
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        {{ component('SelectIssueType', {
+                            'issue': issue,
+                            'types': types
+                        }) }}
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        {{ component('SelectIssueStatus', {
+                            'issue': issue,
+                            'statuses': statuses
+                        }) }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

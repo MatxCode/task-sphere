@@ -1,0 +1,9 @@
+<div {{ attributes }}>
+    <form method="post" action="{{ path('update_issue_status', { id: issue.id }) }}" id="issueStatusForm">
+        <select aria-label="Status" name="status" class="form-select mb-3" onchange="document.getElementById('issueStatusForm').submit()">
+            {% for status in statuses %}
+                <option value="{{ status.value }}" {% if issue.status == status %}selected{% endif %}>{{ status.label }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
