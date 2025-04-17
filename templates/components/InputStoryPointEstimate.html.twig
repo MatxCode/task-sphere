@@ -1,0 +1,14 @@
+<div>
+    <form method="post" action="{{ path('update_story_points', { id: issue.id }) }}">
+        <input
+                aria-label="Points"
+                type="number"
+                name="storyPoints"
+                class="form-control"
+                value="{{ issue.storyPointEstimate }}"
+                min="0"
+                required
+                onchange="this.form.submit()"
+        >
+    </form>
+</div>

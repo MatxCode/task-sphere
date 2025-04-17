@@ -1,0 +1,9 @@
+<div {{ attributes }}>
+    <form method="post" action="{{ path('update_issue_assignee', { id: issue.id }) }}" id="issueAssigneeForm">
+        <select aria-label="Responsable" name="assignee" class="form-select mb-3" onchange="document.getElementById('issueAssigneeForm').submit()">
+            {% for person in people %}
+                <option value="{{ person.id }}" {% if issue.assignee == person %}selected{% endif %}>{{ person }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>

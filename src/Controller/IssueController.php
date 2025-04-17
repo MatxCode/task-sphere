@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Attachment;
 use App\Entity\Issue;
+use App\Entity\User;
 use App\Enum\IssueStatus;
 use App\Form\Type\IssueType;
 use App\Service\AttachmentService;
@@ -130,6 +131,57 @@ class IssueController extends AbstractController
         $status = IssueStatus::from($request->request->get('status'));
 
         $issue->setStatus($status);
+
+        $em->flush();
+
+        return $this->redirectToRoute('issue_show', ['id' => $issue->getId()]);
+    }
+
+    #[Route('/issue/{id}/update_assignee', name: 'update_issue_assignee', methods: ['POST'])]
+    public function updateAssignee(Request $request, Issue $issue, EntityManagerInterface $em): Response
+    {
+        $assigneeId = $request->request->get('assignee');
+
+        if (empty($assigneeId)) {
+            $issue->setAssignee(null);
+        } else {
+            $assignee = $em->getRepository(User::class)->find($assigneeId);
+            if (!$assignee) {
+                throw $this->createNotFoundException('Utilisateur non trouvé');
+            }
+            $issue->setAssignee($assignee);
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('issue_show', ['id' => $issue->getId()]);
+    }
+
+    #[Route('/issue/{id}/update-story-points', name: 'update_story_points', methods: ['POST'])]
+    public function updateStoryPoints(Request $request, Issue $issue, EntityManagerInterface $em): Response
+    {
+        $storyPoints = $request->request->get('storyPoints');
+
+        $issue->setStoryPointEstimate($storyPoints);
+        $em->flush();
+
+        return $this->redirectToRoute('issue_show', ['id' => $issue->getId()]);
+    }
+
+    #[Route('/issue/{id}/update_reporter', name: 'update_issue_reporter', methods: ['POST'])]
+    public function updateReporter(Request $request, Issue $issue, EntityManagerInterface $em): Response
+    {
+        $reporterId = $request->request->get('reporter');
+
+        if (empty($reporterId)) {
+            $issue->setReporter(null);
+        } else {
+            $reporter = $em->getRepository(User::class)->find($reporterId);
+            if (!$reporter) {
+                throw $this->createNotFoundException('Utilisateur non trouvé');
+            }
+            $issue->setReporter($reporter);
+        }
 
         $em->flush();
 
