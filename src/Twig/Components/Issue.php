@@ -24,6 +24,8 @@ class Issue
     #[LiveProp(writable: ['description', 'summary'])]
     #[Assert\Valid]
     public \App\Entity\Issue $issue;
+
+    /** @var Attachment[] */
     #[LiveProp]
     public array $attachments = [];
 

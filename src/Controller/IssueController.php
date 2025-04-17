@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Attachment;
 use App\Entity\Issue;
 use App\Form\Type\IssueType;
+use App\Service\AttachmentService;
 use App\Service\ProjectService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -87,5 +89,23 @@ class IssueController extends AbstractController
         $em->flush();
 
         return $this->json(['success' => true, 'description' => $issue->getDescription()]);
+    }
+
+    #[Route('/issue/{id}/add-attachment', name: 'issue_add_attachment', methods: ['POST'])]
+    public function addAttachment(Request $request, Issue $issue, AttachmentService $attachmentService, EntityManagerInterface $em): Response
+    {
+        $attachment = $attachmentService->handleUploadedAttachment($issue, $request);
+
+        return $this->redirectToRoute('issue_show', ['id' => $issue->getId()]);
+    }
+
+    #[Route('/attachment/{id}/delete', name: 'issue_delete_attachment', methods: ['POST'])]
+    public function deleteAttachment(Attachment $attachment, EntityManagerInterface $em): Response
+    {
+        $issueId = $attachment->getIssue()->getId();
+        $em->remove($attachment);
+        $em->flush();
+
+        return $this->redirectToRoute('issue_show', ['id' => $issueId]);
     }
 }
