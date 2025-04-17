@@ -1,5 +1,5 @@
-<div {{ attributes.defaults(stimulus_controller('ProjectBoardController')) }} class="row" data-poll="delay(5000)|getIssues">
-    <div class="col-md-4 col-sm-12">
+<div {{ attributes.defaults({'data-controller': 'project-board'}) }} class="row">
+<div class="col-md-4 col-sm-12">
         {{ _self.card('Prêt', '2', readyIssues) }}
     </div>
     <div class="col-md-4 col-sm-12">

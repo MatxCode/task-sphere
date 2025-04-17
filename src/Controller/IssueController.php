@@ -187,4 +187,20 @@ class IssueController extends AbstractController
 
         return $this->redirectToRoute('issue_show', ['id' => $issue->getId()]);
     }
+
+    #[Route('/issue/{id}/update_status_ajax', name: 'update_issue_status_ajax', methods: ['POST'])]
+    public function updateStatusAjax(Request $request, Issue $issue, EntityManagerInterface $em): Response
+    {
+        $status = $request->request->get('status');
+
+        try {
+            $issue->setStatus(\App\Enum\IssueStatus::from($status));
+            $em->flush();
+
+            return $this->json(['success' => true]);
+        } catch (\Throwable $e) {
+            return $this->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+    }
+
 }
