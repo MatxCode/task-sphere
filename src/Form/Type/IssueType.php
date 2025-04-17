@@ -25,13 +25,12 @@ class IssueType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var Project $project */
-        $project = $this->security->getUser()->getSelectedProject();
+        $project = $options['project'];
+        $currentUser = $this->security->getUser();
 
         $builder
             ->add('project', EntityType::class, [
-                'attr' => [
-                    'class' => 'd-none',
-                ],
+                'attr' => ['class' => 'd-none'],
                 'class' => Project::class,
                 'data' => $project,
                 'label' => false,
@@ -53,26 +52,30 @@ class IssueType extends AbstractType
             ])
             ->add('assignee', EntityType::class, [
                 'class' => User::class,
-                'choices' => $project->getMembers(),
+                'choices' => $project ? $project->getMembers() : [],
+                'choice_value' => 'id', // Ajouté pour assurer une bonne conversion
                 'placeholder' => 'Assigné',
                 'label' => 'Assigné',
+                'required' => false,
             ])
             ->add('reporter', EntityType::class, [
                 'class' => User::class,
-                'choices' => $project->getMembers(),
-                'data' => $this->security->getUser(),
+                'choices' => $project ? $project->getMembers() : [],
+                'choice_value' => 'id', // Ajouté pour assurer une bonne conversion
+                'data' => $currentUser,
                 'label' => 'Rapporteur',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Créer',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Issue::class,
+            'project' => null,
         ]);
+        $resolver->setRequired('project');
     }
 }

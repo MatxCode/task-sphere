@@ -42,7 +42,9 @@ class IssueController extends AbstractController
     public function create(Request $request, EntityManagerInterface $em): Response
     {
         $issue = new Issue();
-        $form = $this->createForm(IssueType::class, $issue);
+        $form = $this->createForm(IssueType::class, $issue, [
+            'project' => $this->getUser()->getSelectedProject()
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,23 +58,6 @@ class IssueController extends AbstractController
 
         // Gestion des erreurs
         dd($form->getErrors(true));
-    }
-
-    #[Route('/issue/{id}/delete', name: 'issue_delete', methods: ['POST'])]
-    public function delete(Request $request, string $keyCode, ProjectService $projectService): Response
-    {
-        $project = $projectService->findOneByKeyCode($keyCode);
-
-        if (!$project) {
-            throw $this->createNotFoundException('Project not found');
-        }
-
-        if ($this->isCsrfTokenValid('delete'.$keyCode, $request->request->get('_token'))) {
-            $projectService->remove($project);
-            $this->addFlash('success', 'Project deleted successfully');
-        }
-
-        return $this->redirectToRoute('project_list');
     }
 
     #[Route('/issue/{id}/update-summary', name: 'issue_update_summary', methods: ['POST'])]

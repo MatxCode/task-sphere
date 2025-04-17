@@ -5,7 +5,15 @@
                 <h5 class="modal-title">Créer un ticket</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            {{ component('IssueForm') }}
+            {% if app.user.selectedProject %}
+                {{ component('IssueForm', { project: app.user.selectedProject }) }}
+            {% else %}
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        Veuillez d'abord sélectionner un projet avant de créer un ticket.
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

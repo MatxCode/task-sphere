@@ -36,6 +36,21 @@ class ProjectService
 
     public function remove(Project $project): void
     {
+        // 1. Mettre à jour tous les utilisateurs qui ont ce projet comme selected_project
+        $users = $this->em->getRepository(User::class)
+            ->findBy(['selectedProject' => $project]);
+
+        foreach ($users as $user) {
+            $user->setSelectedProject(null);
+        }
+
+        // 2. Supprimer toutes les issues associées
+        foreach ($project->getIssues() as $issue) {
+            $this->em->remove($issue);
+        }
+
+        // 3. Supprimer le projet
+        $this->em->flush(); // Optionnel: flush intermédiaire
         $this->em->remove($project);
         $this->em->flush();
     }

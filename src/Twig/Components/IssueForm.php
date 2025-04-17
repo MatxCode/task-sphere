@@ -3,6 +3,7 @@
 namespace App\Twig\Components;
 
 use App\Entity\Issue;
+use App\Entity\Project;
 use App\Form\Type\IssueType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -20,13 +21,28 @@ class IssueForm extends AbstractController
     use ValidatableComponentTrait;
 
     #[LiveProp]
+    public ?Project $project = null;
+
+    #[LiveProp]
     public ?Issue $initialFormData = null;
+
+    public function mount(): void
+    {
+        $this->project = $this->getUser()->getSelectedProject();
+        $this->initialFormData = new Issue();
+    }
+
     protected function instantiateForm(): FormInterface
     {
-        $this->initialFormData = new Issue();
+        if (null === $this->project) {
+            throw new \RuntimeException('No project selected');
+        }
 
-        return $this->createForm(IssueType::class, $this->initialFormData);
+        return $this->createForm(IssueType::class, $this->initialFormData, [
+            'project' => $this->project
+        ]);
     }
+
 
 //    #[LiveAction]
 //    public function save(EntityManagerInterface $em): Response
