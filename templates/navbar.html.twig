@@ -14,7 +14,11 @@
                         Projets
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('project_show', { 'keyCode': app.user.selectedProject.keyCode }) }}">
+                                {{ app.user.selectedProject }}
+                            </a>
+                        </li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ path('project_list') }}">Voir tous les projets</a></li>
                         <li><a class="dropdown-item" data-bs-target="#modalCreateProject" data-bs-toggle="modal" href="#">Créer un projet</a></li>
