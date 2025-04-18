@@ -1,6 +1,7 @@
 framework:
     secret: '%env(APP_SECRET)%'
-    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_proxies: '%env(default:127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16:TRUSTED_PROXIES)%'
+    trusted_hosts: '%env(default:^(.+)\.render\.com$,localhost:TRUSTED_HOSTS)%'
     http_method_override: false
     handle_all_throwables: true
 
