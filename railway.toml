@@ -2,7 +2,8 @@
 builder = "DOCKERFILE"
 
 [deploy]
-startCommand = "frankenphp run --config /etc/caddy/Caddyfile --env=prod"
+startCommand = "frankenphp run --config /etc/caddy/Caddyfile"
 healthcheckPath = "/"
 healthcheckTimeout = 30
+healthcheckInterval = 5
 restartPolicyType = "ON_FAILURE"
