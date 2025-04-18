@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-FROM dunglas/frankenphp:latest
-
+FROM dunglas/frankenphp:1.0.0-php8.3
 WORKDIR /app
 
 # 1. D'abord copier UNIQUEMENT les fichiers nécessaires pour composer

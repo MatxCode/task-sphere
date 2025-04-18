@@ -6,16 +6,11 @@
 :{$PORT} {
     root * /app/public
 
-    php {
-        transport frankenphp
+    # Ancienne syntaxe compatible
+    php_frankenphp {
         resolve_root_symlink
         split .php
     }
 
-    file_server {
-        precompressed br gzip
-    }
-
-    # Routing Symfony
-    try_files {path} {path}/ /index.php
+    file_server
 }
