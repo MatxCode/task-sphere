@@ -43,9 +43,6 @@ ENTRYPOINT ["docker-entrypoint"]
 
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
 
-RUN chmod +x /usr/local/bin/frankenphp && \
-    chmod +x /usr/local/bin/docker-php-entrypoint
-
 #CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
 
 # Dev FrankenPHP image
@@ -105,9 +102,8 @@ RUN set -eux; \
     chown -R www-data:www-data var; \
     sync;
 
-# Installer Caddy
-RUN curl -fsSL https://caddyserver.com/download/linux/amd64?license=personal -o /usr/local/bin/caddy \
-    && chmod +x /usr/local/bin/caddy
+RUN chmod +x /usr/local/bin/frankenphp && \
+    chmod +x /usr/local/bin/docker-php-entrypoint
 
 # Copie le script de démarrage dans l’image prod
 COPY --chmod=755 frankenphp/start.sh /usr/local/bin/start
