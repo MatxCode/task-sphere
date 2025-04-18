@@ -39,7 +39,4 @@ RUN mkdir -p var && chmod +x bin/console && chown -R www-data:www-data var
 RUN chmod +x bin/console && chown -R www-data:www-data var
 
 # Exposer le port pour Railway
-EXPOSE ${PORT:-80}
-
-# Commande explicite pour démarrer FrankenPHP sur le port spécifié par Railway
-CMD frankenphp run --config /etc/caddy/Caddyfile --address 0.0.0.0:${PORT:-80}
+EXPOSE 8080
