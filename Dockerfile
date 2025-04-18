@@ -63,12 +63,6 @@ RUN set -eux; \
 
 COPY --link frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
-# Copie le script de démarrage
-COPY --chmod=755 frankenphp/start.sh /usr/local/bin/start
-
-# Point d’entrée
-CMD ["start"]
-
 # Prod FrankenPHP image
 FROM frankenphp_base AS frankenphp_prod
 
@@ -110,5 +104,12 @@ RUN set -eux; \
     chmod +x bin/console; \
     chown -R www-data:www-data var; \
     sync;
+
+# Copie le script de démarrage dans l’image prod
+COPY --chmod=755 frankenphp/start.sh /usr/local/bin/start
+
+# Démarre avec le script
+CMD ["start"]
+
 
 # Note: Les commandes cache:clear et cache:warmup seront exécutées au runtime
