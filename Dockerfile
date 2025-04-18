@@ -83,7 +83,6 @@ RUN set -eux; \
 
 # Étape 3: Copier tout le code source
 COPY --link . ./
-COPY --link .env .env
 
 # Étape 4: Créer un .env minimal avec toutes les variables REQUISES
 RUN { \
