@@ -38,5 +38,8 @@ RUN composer dump-env prod
 RUN mkdir -p var && chmod +x bin/console && chown -R www-data:www-data var
 RUN chmod +x bin/console && chown -R www-data:www-data var
 
-# Exposer le port pour Railway
+# Copier le Caddyfile spécial pour Railway
+COPY --link Caddyfile.railway /etc/caddy/Caddyfile
+
+# Exposer le port
 EXPOSE 8080
