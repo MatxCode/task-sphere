@@ -31,6 +31,9 @@ RUN composer install --no-dev --no-interaction --no-scripts --prefer-dist
 
 COPY --link . .
 
+# Autoriser Composer en root
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 RUN echo "APP_ENV=prod" > .env
 RUN composer dump-autoload --classmap-authoritative
 RUN composer dump-env prod
