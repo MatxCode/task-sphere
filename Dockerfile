@@ -72,17 +72,25 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link frankenphp/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 COPY --link frankenphp/worker.Caddyfile /etc/caddy/worker.Caddyfile
 
-# copy sources
-COPY --link . ./
+# Copy composer files first
+COPY --link composer.* symfony.* ./
 
-# Créer un .env minimal si inexistant
-RUN test -f .env || echo "APP_ENV=prod" > .env
-
-# Install dependencies
+# Install dependencies without scripts
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
     composer dump-autoload --classmap-authoritative; \
+    sync;
+
+# Copy the rest of the application
+COPY --link . ./
+
+# Create minimal .env file with DATABASE_URL placeholder
+RUN echo "APP_ENV=prod" > .env && \
+    echo "DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder" >> .env
+
+# Now run scripts with the placeholder env vars
+RUN set -eux; \
     composer dump-env prod; \
     composer run-script --no-dev post-install-cmd; \
     chmod +x bin/console; \
