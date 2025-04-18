@@ -1,5 +1,21 @@
-{$PORT} {
+{
+    auto_https off
+    order php before file_server
+}
+
+:{$PORT} {
     root * /app/public
-    php_frankenphp * /index.php
-    file_server
+
+    php {
+        transport frankenphp
+        resolve_root_symlink
+        split .php
+    }
+
+    file_server {
+        precompressed br gzip
+    }
+
+    # Routing Symfony
+    try_files {path} {path}/ /index.php
 }
