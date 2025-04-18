@@ -36,8 +36,12 @@ RUN composer dump-env prod
 
 RUN mkdir -p var && chmod +x bin/console && chown -R www-data:www-data var
 
-# Utilisez un seul Caddyfile adapté pour Railway
-COPY --link frankenphp/Caddyfile.railway /etc/caddy/Caddyfile
+# Option 1: Utilisez le Caddyfile standard si le .railway n'existe pas
+COPY --link frankenphp/Caddyfile /etc/caddy/Caddyfile
 
-# Exposer le port dynamique de Railway
+# Ou Option 2: Créez un Caddyfile minimal directement dans le Dockerfile
+# RUN echo ":${PORT} {\n    root * /app/public\n    php_frankenphp * /index.php\n    file_server\n}" > /etc/caddy/Caddyfile
+
+# Exposer le port dynamique
+ENV PORT=8080
 EXPOSE $PORT
