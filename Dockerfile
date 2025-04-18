@@ -106,8 +106,8 @@ RUN set -eux; \
     sync;
 
 # Installer Caddy
-RUN curl -fsSL https://get.caddyserver.com | bash -s personal
-RUN mv /usr/local/bin/caddy /usr/bin/caddy
+RUN curl -fsSL https://caddyserver.com/download/linux/amd64?license=personal -o /usr/local/bin/caddy \
+    && chmod +x /usr/local/bin/caddy
 
 # Copie le script de démarrage dans l’image prod
 COPY --chmod=755 frankenphp/start.sh /usr/local/bin/start
