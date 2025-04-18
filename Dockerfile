@@ -63,7 +63,7 @@ RUN set -eux; \
 
 COPY --link frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
-CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]
+CMD ["sh", "-c", "chmod +x /usr/local/bin/frankenphp && /usr/local/bin/docker-php-entrypoint frankenphp run --config /etc/caddy/Caddyfile"]
 
 # Prod FrankenPHP image
 FROM frankenphp_base AS frankenphp_prod
