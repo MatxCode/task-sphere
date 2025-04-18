@@ -80,14 +80,15 @@ RUN set -eux; \
 COPY --link . ./
 RUN rm -Rf frankenphp/
 
-# Créer un .env minimal sans informations sensibles
+# Créer un .env minimal
 RUN echo "APP_ENV=prod" > .env
 
-# Désactiver temporairement les auto-scripts pour le build
+# Modifier temporairement composer.json pour désactiver cache:clear
+RUN sed -i 's/"cache:clear": "symfony-cmd"/"cache:clear": "echo Skipping cache:clear"/' composer.json
+
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer dump-autoload --classmap-authoritative --no-dev; \
     composer dump-env prod || true; \
-    # Exécuter post-install-cmd sans les auto-scripts
-    SYMFONY_SKIP_CACHE_CLEAR=1 composer run-script --no-dev post-install-cmd; \
+    composer run-script --no-dev post-install-cmd; \
     chmod +x bin/console; sync;
