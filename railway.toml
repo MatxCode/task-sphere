@@ -5,4 +5,6 @@ builder = "DOCKERFILE"
 startCommand = "frankenphp run --config /etc/caddy/Caddyfile"
 healthcheckPath = "/"
 healthcheckTimeout = 5
-healthcheckInterval = 10
+
+[variables]
+APP_ENV = "prod"

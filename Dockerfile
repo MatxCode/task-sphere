@@ -21,16 +21,26 @@ RUN install-php-extensions \
 # Configuration PHP
 COPY frankenphp/conf.d/app.ini $PHP_INI_DIR/conf.d/
 
-# Installation Composer
+# Mise à jour de Flex pour corriger les dépréciations
+RUN composer update symfony/flex --no-plugins --no-scripts
+
+# Installation Composer (sans .env)
 COPY composer.* ./
 RUN composer install --no-dev --no-autoloader --no-scripts --no-interaction
 
-# Copie de l'application
+# Copie de l'application (sans .env)
 COPY . .
 
 # Configuration production
-RUN composer dump-autoload --classmap-authoritative && \
-    composer dump-env prod && \
+RUN set -eux; \
+    # Crée un .env minimal pour la prod
+    echo "APP_ENV=prod" > .env; \
+    echo "APP_DEBUG=0" >> .env; \
+    echo "DATABASE_URL=\${DATABASE_URL}" >> .env; \
+    echo "APP_SECRET=\${APP_SECRET}" >> .env; \
+    # Génère l'autoloader
+    composer dump-autoload --classmap-authoritative; \
+    # Permissions
     mkdir -p var/cache var/log && \
     chown -R www-data:www-data var && \
     chmod -R 777 var
