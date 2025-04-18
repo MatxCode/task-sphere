@@ -9,7 +9,8 @@ services:
     startCommand: |
       php bin/console cache:clear --no-warmup && 
       php bin/console cache:warmup && 
-      frankenphp run --config /etc/caddy/Caddyfile
+      chmod +x /usr/local/bin/frankenphp
+      /usr/local/bin/frankenphp run --config /etc/caddy/Caddyfile
     envVars:
       - key: APP_ENV
         value: prod
