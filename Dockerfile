@@ -72,27 +72,32 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link frankenphp/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 COPY --link frankenphp/worker.Caddyfile /etc/caddy/worker.Caddyfile
 
-# Copy composer files first
+# Étape 1: Copier uniquement les fichiers nécessaires pour l'installation des dépendances
 COPY --link composer.* symfony.* ./
 
-# Install dependencies without scripts
+# Étape 2: Installer les dépendances sans scripts
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
-    composer dump-autoload --classmap-authoritative; \
     sync;
 
-# Copy the rest of the application
+# Étape 3: Copier tout le code source
 COPY --link . ./
 
-# Create minimal .env file with DATABASE_URL placeholder
+# Étape 4: Configurer l'environnement minimal
 RUN echo "APP_ENV=prod" > .env && \
     echo "DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder" >> .env
 
-# Now run scripts with the placeholder env vars
+# Étape 5: Reconstruire l'autoloader avec toutes les classes disponibles
+RUN set -eux; \
+    composer dump-autoload --classmap-authoritative; \
+    sync;
+
+# Étape 6: Exécuter les scripts avec le kernel maintenant disponible
 RUN set -eux; \
     composer dump-env prod; \
-    composer run-script --no-dev post-install-cmd; \
+    php bin/console cache:clear --no-warmup; \
+    php bin/console cache:warmup; \
     chmod +x bin/console; \
     chown -R www-data:www-data var; \
     sync;
