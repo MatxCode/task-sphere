@@ -18,15 +18,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	git \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Dans la partie où vous installez les extensions PHP
 RUN set -eux; \
-	install-php-extensions \
-		@composer \
-		apcu \
-		intl \
-		opcache \
-        pdo_mysql \
-		zip \
-	;
+    install-php-extensions \
+        @composer \
+        apcu \
+        intl \
+        opcache \
+        pdo_pgsql \
+        zip \
+    ;
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -71,24 +72,19 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link frankenphp/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 COPY --link frankenphp/worker.Caddyfile /etc/caddy/worker.Caddyfile
 
-# prevent the reinstallation of vendors at every changes in the source code
-COPY --link composer.* symfony.* ./
-RUN set -eux; \
-	composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
-
 # copy sources
 COPY --link . ./
-RUN rm -Rf frankenphp/
 
-# Créer un .env minimal
-RUN echo "APP_ENV=prod" > .env
+# Créer un .env minimal si inexistant
+RUN test -f .env || echo "APP_ENV=prod" > .env
 
-# Modifier temporairement composer.json pour désactiver cache:clear
-RUN sed -i 's/"cache:clear": "symfony-cmd"/"cache:clear": "echo Skipping cache:clear"/' composer.json
-
+# Install dependencies
 RUN set -eux; \
     mkdir -p var/cache var/log; \
-    composer dump-autoload --classmap-authoritative --no-dev; \
-    composer dump-env prod || true; \
+    composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+    composer dump-autoload --classmap-authoritative; \
+    composer dump-env prod; \
     composer run-script --no-dev post-install-cmd; \
-    chmod +x bin/console; sync;
+    chmod +x bin/console; \
+    chown -R www-data:www-data var; \
+    sync;

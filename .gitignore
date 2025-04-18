@@ -31,3 +31,4 @@ yarn-error.log
 
 compose.override.yaml
 docker-compose.override.yaml
+render.yaml

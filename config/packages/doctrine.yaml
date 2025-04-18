@@ -1,6 +1,7 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        driver: pdo_pgsql
 
         server_version: '8.3.0.1'
 
