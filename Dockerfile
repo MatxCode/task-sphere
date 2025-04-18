@@ -80,6 +80,8 @@ RUN set -eux; \
 COPY --link . ./
 RUN rm -Rf frankenphp/
 
+COPY --link .env ./
+
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
