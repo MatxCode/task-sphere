@@ -46,7 +46,7 @@ HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit
 RUN chmod +x /usr/local/bin/frankenphp && \
     chmod +x /usr/local/bin/docker-php-entrypoint
 
-CMD ["sh", "-c", "chmod +x /usr/local/bin/frankenphp && /usr/local/bin/frankenphp run --config /etc/caddy/Caddyfile"]
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
 
 # Dev FrankenPHP image
 FROM frankenphp_base AS frankenphp_dev
@@ -63,7 +63,7 @@ RUN set -eux; \
 
 COPY --link frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
-CMD ["sh", "-c", "chmod +x /usr/local/bin/frankenphp && /usr/local/bin/docker-php-entrypoint frankenphp run --config /etc/caddy/Caddyfile"]
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
 
 # Prod FrankenPHP image
 FROM frankenphp_base AS frankenphp_prod
