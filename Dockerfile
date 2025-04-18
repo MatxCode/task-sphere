@@ -38,6 +38,7 @@ RUN echo "APP_ENV=prod" > .env
 RUN composer dump-autoload --classmap-authoritative
 RUN composer dump-env prod
 
+RUN mkdir -p var && chmod +x bin/console && chown -R www-data:www-data var
 RUN chmod +x bin/console && chown -R www-data:www-data var
 
 # L'image démarre automatiquement avec le bon CMD
