@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.4
 
 FROM dunglas/frankenphp:1-php8.3
 
@@ -21,9 +21,8 @@ RUN install-php-extensions \
     pdo_pgsql \
     zip
 
-# Configuration PHP & Caddy
+# Configuration PHP
 COPY --link frankenphp/conf.d/app.ini $PHP_INI_DIR/conf.d/
-COPY --link frankenphp/Caddyfile /etc/caddy/Caddyfile
 
 # Composer & Symfony
 COPY --link composer.* symfony.* ./
@@ -36,10 +35,9 @@ RUN composer dump-autoload --classmap-authoritative
 RUN composer dump-env prod
 
 RUN mkdir -p var && chmod +x bin/console && chown -R www-data:www-data var
-RUN chmod +x bin/console && chown -R www-data:www-data var
 
-# Copier le Caddyfile spécial pour Railway
-COPY --link Caddyfile.railway /etc/caddy/Caddyfile
+# Utilisez un seul Caddyfile adapté pour Railway
+COPY --link frankenphp/Caddyfile.railway /etc/caddy/Caddyfile
 
-# Exposer le port
-EXPOSE 8080
+# Exposer le port dynamique de Railway
+EXPOSE $PORT
