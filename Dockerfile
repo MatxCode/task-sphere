@@ -105,6 +105,10 @@ RUN set -eux; \
     chown -R www-data:www-data var; \
     sync;
 
+# Installer Caddy
+RUN curl -fsSL https://get.caddyserver.com | bash -s personal
+RUN mv /usr/local/bin/caddy /usr/bin/caddy
+
 # Copie le script de démarrage dans l’image prod
 COPY --chmod=755 frankenphp/start.sh /usr/local/bin/start
 
