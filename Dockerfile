@@ -72,7 +72,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link frankenphp/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 COPY --link frankenphp/worker.Caddyfile /etc/caddy/worker.Caddyfile
 
-# Étape 1: Copier uniquement les fichiers nécessaires pour l'installation des dépendances
+# Étape 1: Copier les fichiers nécessaires pour composer
 COPY --link composer.* symfony.* ./
 
 # Étape 2: Installer les dépendances sans scripts
@@ -84,20 +84,23 @@ RUN set -eux; \
 # Étape 3: Copier tout le code source
 COPY --link . ./
 
-# Étape 4: Configurer l'environnement minimal
-RUN echo "APP_ENV=prod" > .env && \
-    echo "DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder" >> .env
+# Étape 4: Créer un .env minimal avec toutes les variables REQUISES
+RUN { \
+    echo "APP_ENV=prod"; \
+    echo "APP_SECRET=ChangeThisSecretKeyForProduction!"; \
+    echo "DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder"; \
+} > .env
 
-# Étape 5: Reconstruire l'autoloader avec toutes les classes disponibles
+# Étape 5: Dump de l'environnement et préparation du cache
 RUN set -eux; \
     composer dump-autoload --classmap-authoritative; \
+    composer dump-env prod; \
     sync;
 
-# Étape 6: Exécuter les scripts avec le kernel maintenant disponible
+# Étape 6: Configurer les permissions
 RUN set -eux; \
-    composer dump-env prod; \
-    php bin/console cache:clear --no-warmup; \
-    php bin/console cache:warmup; \
     chmod +x bin/console; \
     chown -R www-data:www-data var; \
     sync;
+
+# Note: Les commandes cache:clear et cache:warmup seront exécutées au runtime

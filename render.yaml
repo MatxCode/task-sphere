@@ -6,13 +6,14 @@ services:
     region: frankfurt
     dockerfilePath: Dockerfile
     buildCommand: docker build --target frankenphp_prod -t tasksphere .
-    startCommand: frankenphp run --config /etc/caddy/Caddyfile
+    startCommand: |
+      php bin/console cache:clear --no-warmup && 
+      php bin/console cache:warmup && 
+      frankenphp run --config /etc/caddy/Caddyfile
     envVars:
       - key: APP_ENV
         value: prod
+      - key: APP_SECRET
+        fromSecret: app_secret  # Créez ce secret dans Render
       - key: DATABASE_URL
-        value: postgresql://task_sphere_db_user:QiRF9lSgtLqTkbuq1WSSJ6BfmWxt0Hqd@dpg-d011mcbuibrs73eu4fc0-a.frankfurt-postgres.render.com:5432/task_sphere_db
-      - key: TRUSTED_PROXIES
-        value: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      - key: TRUSTED_HOSTS
-        value: ^(.+)\.render\.com$,localhost
+        fromSecret: database_url
