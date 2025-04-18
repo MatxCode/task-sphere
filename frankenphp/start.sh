@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /usr/local/bin/frankenphp run --config /etc/caddy/Caddyfile
+exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
