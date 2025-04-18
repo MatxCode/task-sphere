@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tasksphere
+    env: docker
+    repo: https://github.com/MatxCode/task-sphere
+    plan: free
+    region: frankfurt
+    branch: main
+    rootDir: .
+    dockerfilePath: Dockerfile
+    autoDeploy: true
