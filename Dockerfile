@@ -80,12 +80,14 @@ RUN set -eux; \
 COPY --link . ./
 RUN rm -Rf frankenphp/
 
-# Créer un .env minimal si le fichier n'existe pas
-RUN touch .env && echo "APP_ENV=prod" > .env
+# Créer un .env minimal sans informations sensibles
+RUN echo "APP_ENV=prod" > .env
 
+# Désactiver temporairement les auto-scripts pour le build
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer dump-autoload --classmap-authoritative --no-dev; \
     composer dump-env prod || true; \
-    composer run-script --no-dev post-install-cmd; \
+    # Exécuter post-install-cmd sans les auto-scripts
+    SYMFONY_SKIP_CACHE_CLEAR=1 composer run-script --no-dev post-install-cmd; \
     chmod +x bin/console; sync;
