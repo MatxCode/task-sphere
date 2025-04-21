@@ -1,26 +1,24 @@
-# 1. Utilise l'image officielle FrankenPHP
-FROM dunglas/frankenphp:1-php8.3 as frankenphp
+FROM php:8.3-fpm
 
-# 2. Copie les fichiers du projet dans le conteneur
-COPY . /app
+# 1. Installe les extensions PHP nécessaires
+RUN apt-get update && apt-get install -y \
+    git unzip zip libicu-dev libpq-dev libonig-dev libzip-dev \
+    && docker-php-ext-install intl pdo pdo_mysql zip opcache
 
-# 3. Se place dans le dossier de l'application
-WORKDIR /app
+# 2. Installe Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# 4. Installe les dépendances PHP sans les dev
-RUN set -eux; \
-    composer install --no-dev --optimize-autoloader; \
-    composer dump-autoload --classmap-authoritative; \
-    composer dump-env prod; \
-    chmod +x bin/console; \
-    mkdir -p var/cache var/log
+# 3. Copie les fichiers du projet
+WORKDIR /var/www
+COPY . .
 
-# 5. Donne les bons droits
-RUN chown -R www-data:www-data /app/var
+# 4. Installe les dépendances PHP (sans dev)
+RUN composer install --no-dev --optimize-autoloader \
+    && composer dump-env prod \
+    && chmod +x bin/console
 
-# 6. Configuration FrankenPHP (si tu as besoin de fichiers custom)
-# COPY frankenphp/Caddyfile /etc/caddy/Caddyfile
-# COPY frankenphp/conf.d/app.ini /usr/local/etc/php/conf.d/app.ini
+# 5. Crée les dossiers cache/log
+RUN mkdir -p var/cache var/log && chown -R www-data:www-data var
 
-# ✅ Pas besoin de COPY .env.local ou .env
-# Toutes les variables doivent être passées via Railway ou ton environnement d'exécution.
+# 6. Utilise l'utilisateur www-data
+USER www-data
