@@ -1,6 +1,6 @@
 {
     order php_server before file_server
-    auto_https off  # Désactive HTTPS car Railway le gère
+    auto_https off
     log {
         output stdout
         level DEBUG
@@ -11,25 +11,19 @@
     root * /app/public
     encode zstd br gzip
 
-    # Détecte si la requête arrive en HTTPS via le proxy Railway
-    @is_https {
-        header X-Forwarded-Proto https
+    # Debug: Affiche les headers reçus
+    log {
+        format console
+        level DEBUG
     }
-    # Redirige HTTP → HTTPS uniquement si la requête ne vient pas du proxy
-    @needs_https {
-        not header X-Forwarded-Proto https
-    }
-    redir @needs_https https://{host}{uri} permanent
 
-    # Configure FrankenPHP pour Symfony
     php_server {
-        root /app/public  # Point d'entrée de Symfony
+        root /app/public
         split .php
         env PATH /usr/local/bin:/usr/bin:/bin
-        resolve_root_symlink  # Gère les liens symboliques
+        resolve_root_symlink
     }
 
-    # Headers de sécurité
-    header ?Permissions-Policy "browsing-topics=()"
-    header ?Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+    # Désactiver temporairement HTTPS pour tests
+    header ?Strict-Transport-Security "max-age=0"
 }
