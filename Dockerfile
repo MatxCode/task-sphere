@@ -80,6 +80,7 @@ RUN set -eux; \
 COPY --link . ./
 RUN rm -Rf frankenphp/
 RUN echo "APP_ENV=prod" > .env
+RUN echo "TRUSTED_PROXIES=127.0.0.1,REMOTE_ADDR" > .env
 
 RUN set -eux; \
     mkdir -p var/cache var/log; \
