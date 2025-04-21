@@ -1,7 +1,8 @@
 framework:
     secret: '%env(APP_SECRET)%'
     trusted_proxies: '%env(TRUSTED_PROXIES)%'
-#    http_method_override: false
+    trusted_hosts: '%env(TRUSTED_HOSTS)%'
+    http_method_override: false
     handle_all_throwables: true
 
     session:

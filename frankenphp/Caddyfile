@@ -4,6 +4,11 @@
     frankenphp {
 
     }
+
+    log {
+            output stdout
+            level DEBUG
+        }
 }
 
 {$SERVER_NAME:localhost} {
