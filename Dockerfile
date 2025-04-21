@@ -81,10 +81,6 @@ COPY --link . ./
 RUN rm -Rf frankenphp/
 #COPY .env.local .env
 
-ENV APP_ENV=prod
-ENV APP_SECRET=${APP_SECRET}
-ENV DATABASE_URL=${DATABASE_URL}
-
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer dump-autoload --classmap-authoritative --no-dev; \
