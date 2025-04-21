@@ -79,11 +79,11 @@ RUN set -eux; \
 # copy sources
 COPY --link . ./
 RUN rm -Rf frankenphp/
+COPY .env.local .env
 
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer dump-autoload --classmap-authoritative --no-dev; \
-    COPY .env.local .env; \
 #    [ -f .env ] && composer dump-env prod || echo "Skipping dump-env (no .env file)"; \
     composer dump-env prod; \
     chmod +x bin/console; \
