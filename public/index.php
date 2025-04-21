@@ -2,11 +2,20 @@
 
 use App\Kernel;
 
-// Charge d'abord notre configuration personnalisée
-require dirname(__DIR__).'/config/bootstrap.php';
+// Désactivation FORCÉE de Dotenv
+putenv('SYMFONY_DOTENV_VARS=0');
+$_SERVER['SYMFONY_DOTENV_VARS'] = '0';
 
-require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+// Configuration FORCÉE en production
+$_SERVER['APP_ENV'] = 'prod';
+$_SERVER['APP_DEBUG'] = '0';
+putenv('APP_ENV=prod');
+putenv('APP_DEBUG=0');
 
-return function (array $context) {
-    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
-};
+// Chargement MANUEL sans autoload_runtime.php
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$kernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
+$kernel->boot();
+$response = $kernel->handle(/* ... */);
+$response->send();
