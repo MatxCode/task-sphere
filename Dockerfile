@@ -80,6 +80,7 @@ RUN set -eux; \
 COPY --link . ./
 RUN rm -Rf frankenphp/
 RUN echo "APP_ENV=prod" > .env
+RUN php bin/console cache:clear
 
 RUN set -eux; \
     mkdir -p var/cache var/log; \
