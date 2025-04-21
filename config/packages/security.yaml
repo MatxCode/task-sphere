@@ -15,12 +15,12 @@ security:
             security: false
 
         main:
-            form_login:
-                check_path: login_index
-                login_path: login_index
-
-            logout:
-                target: login_index
+#            form_login:
+#                check_path: login_index
+#                login_path: login_index
+#
+#            logout:
+#                target: login_index
 
             lazy: true
             provider: app_user_provider
@@ -28,8 +28,8 @@ security:
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/logout, roles: ROLE_USER }
-        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: PUBLIC_ACCESS }
 
 when@test:
     security:

@@ -4,15 +4,6 @@ use App\Kernel;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
-if (
-    isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-    $_SERVER['HTTP_X_FORWARDED_PROTO'] !== 'https'
-) {
-    header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 301);
-    exit();
-}
-
-
 return function (array $context) {
     return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
 };
