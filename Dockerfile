@@ -79,7 +79,7 @@ RUN set -eux; \
 # copy sources
 COPY --link . ./
 RUN rm -Rf frankenphp/
-COPY .env.local .env
+#COPY .env.local .env
 
 RUN set -eux; \
     mkdir -p var/cache var/log; \
