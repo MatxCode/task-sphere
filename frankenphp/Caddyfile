@@ -1,16 +1,17 @@
 {
-    auto_https off
-    order php before file_server
+    order php_server before file_server
+
+    frankenphp {
+
+    }
 }
 
-:{$PORT} {
+{$SERVER_NAME:localhost} {
     root * /app/public
 
-    # Ancienne syntaxe compatible
-    php_frankenphp {
-        resolve_root_symlink
-        split .php
-    }
+    encode zstd br gzip
 
-    file_server
+    header ?Permissions-Policy "browsing-topics=()"
+
+    php_server
 }
