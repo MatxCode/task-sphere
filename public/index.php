@@ -1,14 +1,12 @@
 <?php
-
 use App\Kernel;
 
-// DÉSACTIVER .env EN FORÇANT LES VARIABLES
-$_SERVER['SYMFONY_DOTENV_VARS'] = false;
-$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = 'prod';
-$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0';
+// Solution radicale
+$_SERVER['SYMFONY_DOTENV_VARS'] = '0'; // Désactive Dotenv
+$_ENV['APP_ENV'] = $_SERVER['APP_ENV'] = 'prod';
+$_ENV['APP_DEBUG'] = $_SERVER['APP_DEBUG'] = '0';
 
-require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
-return function (array $context) {
-    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
-};
+$kernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
+$kernel->boot();

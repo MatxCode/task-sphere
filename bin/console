@@ -4,9 +4,9 @@
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
-if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
-    throw new LogicException('Symfony Runtime is missing. Try running "composer require symfony/runtime".');
-}
+$_SERVER['SYMFONY_DOTENV_VARS'] = '0';
+$_ENV['APP_ENV'] = $_SERVER['APP_ENV'] = 'prod';
+$_ENV['APP_DEBUG'] = $_SERVER['APP_DEBUG'] = '0';
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
