@@ -1,22 +1,37 @@
 {
     order php_server before file_server
-
-    frankenphp {
-
-    }
-
     log {
-            output stdout
-            level DEBUG
-        }
+        output stdout
+        level DEBUG
+    }
+    # Désactive HTTPS forcé en local, Railway gère le SSL
+    auto_https off
 }
 
 {$SERVER_NAME:localhost} {
     root * /app/public
-
     encode zstd br gzip
 
-    header ?Permissions-Policy "browsing-topics=()"
+    # Détecte HTTPS derrière le proxy Railway
+    @proxy_https {
+        header X-Forwarded-Proto https
+    }
+    # Redirige HTTP → HTTPS uniquement si la requête arrive en HTTP (hors proxy)
+    @not_proxy_https {
+        not header X-Forwarded-Proto https
+    }
+    redir @not_proxy_https https://{host}{uri} permanent
 
-    php_server
+    # Configure FrankenPHP pour Symfony
+    php_server {
+        # Désactive HTTPS interne
+        transport http
+        # Transmet les headers proxy à PHP
+        trusted_proxies static 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, fc00::/7
+        trusted_proxies header X-Forwarded-For
+    }
+
+    # Headers de sécurité
+    header ?Permissions-Policy "browsing-topics=()"
+    header ?Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
 }
