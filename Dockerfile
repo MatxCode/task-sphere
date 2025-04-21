@@ -8,6 +8,8 @@ FROM dunglas/frankenphp:1-php8.3 AS frankenphp_upstream
 FROM frankenphp_upstream AS frankenphp_base
 
 WORKDIR /app
+COPY .env.local ./
+COPY . .
 
 # persistent / runtime deps
 # hadolint ignore=DL3008
