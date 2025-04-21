@@ -1,17 +1,22 @@
 <?php
 
-use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\Runtime\Runtime;
+use Symfony\Component\Runtime\SymfonyRuntime;
 
-// Désactive complètement Dotenv si en production
-if (!isset($_SERVER['APP_ENV'])) {
-    $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = 'prod';
-    $_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0';
-    return;
+class CustomRuntime extends SymfonyRuntime
+{
+    public function __construct(array $options = [])
+    {
+        // Force le mode production et désactive Dotenv
+        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = 'prod';
+        $_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0';
+        $options['disable_dotenv'] = true;
+
+        parent::__construct($options);
+    }
 }
 
-// Charge .env seulement en développement
-if (!class_exists(Dotenv::class)) {
-    return;
-}
-
-(new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+// Enregistre notre Runtime personnalisé
+return [
+    Runtime::class => CustomRuntime::class
+];

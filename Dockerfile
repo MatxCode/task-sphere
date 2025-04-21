@@ -80,8 +80,7 @@ RUN set -eux; \
 COPY --link . ./
 RUN rm -Rf frankenphp/
 #COPY .env.local .env
-# Ajoutez dans votre Dockerfile
-RUN sed -i "s/new Dotenv())->bootEnv/\/\/ Dotenv disabled/" vendor/symfony/runtime/Component/Runtime/SymfonyRuntime.php
+
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer dump-autoload --classmap-authoritative --no-dev; \
