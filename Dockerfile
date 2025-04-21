@@ -8,8 +8,6 @@ FROM dunglas/frankenphp:1-php8.3 AS frankenphp_upstream
 FROM frankenphp_upstream AS frankenphp_base
 
 WORKDIR /app
-COPY .env ./
-COPY . .
 
 # persistent / runtime deps
 # hadolint ignore=DL3008
@@ -82,6 +80,10 @@ RUN set -eux; \
 COPY --link . ./
 RUN rm -Rf frankenphp/
 #COPY .env.local .env
+
+ENV APP_ENV=prod
+ENV APP_SECRET=${APP_SECRET}
+ENV DATABASE_URL=${DATABASE_URL}
 
 RUN set -eux; \
     mkdir -p var/cache var/log; \
