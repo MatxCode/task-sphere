@@ -2,15 +2,10 @@
 
 use App\Kernel;
 
-// Configuration forcée pour Railway
-$_ENV['APP_ENV'] = $_SERVER['APP_ENV'] = 'prod';
-$_ENV['APP_DEBUG'] = $_SERVER['APP_DEBUG'] = '0';
-putenv('APP_ENV=prod');
-
-// Désactivation du chargement .env si le fichier n'existe pas
-if (!file_exists(dirname(__DIR__).'/.env')) {
-    $_SERVER['SYMFONY_DOTENV_VARS'] = false;
-}
+// DÉSACTIVER .env EN FORÇANT LES VARIABLES
+$_SERVER['SYMFONY_DOTENV_VARS'] = false;
+$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = 'prod';
+$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0';
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
