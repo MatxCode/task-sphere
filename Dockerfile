@@ -83,9 +83,10 @@ RUN rm -Rf frankenphp/
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer dump-autoload --classmap-authoritative --no-dev; \
-    [ -f .env ] && composer dump-env prod || echo "Skipping dump-env (no .env file)"; \
+    COPY .env.local .env; \
+#    [ -f .env ] && composer dump-env prod || echo "Skipping dump-env (no .env file)"; \
+    composer dump-env prod; \
     chmod +x bin/console; \
     sync
-
 
 EXPOSE 80
