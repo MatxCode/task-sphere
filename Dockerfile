@@ -81,6 +81,9 @@ COPY --link . ./
 RUN rm -Rf frankenphp/
 #COPY .env.local .env
 
+echo "APP_ENV=${APP_ENV}" > /app/.env
+echo "DATABASE_URL=${DATABASE_URL}" >> /app/.env
+
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     composer dump-autoload --classmap-authoritative --no-dev; \
