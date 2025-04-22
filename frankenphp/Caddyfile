@@ -9,6 +9,7 @@
 
 http://:{$PORT} {
     bind 0.0.0.0
+    respond "Hello from Caddy"
     root * /app/public
     encode zstd br gzip
 
