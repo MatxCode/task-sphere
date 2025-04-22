@@ -7,7 +7,7 @@
     }
 }
 
-:8080 {
+http://0.0.0.0:8080 {
     root * /app/public
     encode zstd br gzip
 
