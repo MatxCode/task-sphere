@@ -1,24 +1,17 @@
 {
     order php_server before file_server
-    auto_https off
-    log {
-        output stdout
-        level DEBUG
+
+    frankenphp {
+
     }
 }
 
-http://:{$PORT} {
-    bind 0.0.0.0
-    respond "Hello from Caddy"
+{$SERVER_NAME:localhost} {
     root * /app/public
+
     encode zstd br gzip
 
-    log {
-        format console
-        level DEBUG
-    }
+    header ?Permissions-Policy "browsing-topics=()"
 
     php_server
-
-    file_server
 }

@@ -41,7 +41,6 @@ COPY --link frankenphp/Caddyfile /etc/caddy/Caddyfile
 ENTRYPOINT ["docker-entrypoint"]
 
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
-RUN echo ">>> Launching frankenphp with config /etc/caddy/Caddyfile <<<"
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 
 # Dev FrankenPHP image
@@ -65,7 +64,7 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]
 FROM frankenphp_base AS frankenphp_prod
 
 ENV APP_ENV=prod
-#ENV FRANKENPHP_CONFIG="import worker.Caddyfile"
+ENV FRANKENPHP_CONFIG="import worker.Caddyfile"
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
@@ -92,6 +91,4 @@ RUN set -eux; \
     chmod +x bin/console; \
     sync
 
-ENV PORT=8080
-EXPOSE 8080
-
+EXPOSE 80
