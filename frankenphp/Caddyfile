@@ -7,7 +7,7 @@
     }
 }
 
-:8080g {
+:8080 {
     root * /app/public
     encode zstd br gzip
 
