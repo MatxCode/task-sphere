@@ -92,4 +92,6 @@ RUN set -eux; \
     chmod +x bin/console; \
     sync
 
+ENV PORT=8080
 EXPOSE 8080
+
