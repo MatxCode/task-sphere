@@ -91,4 +91,4 @@ RUN set -eux; \
     chmod +x bin/console; \
     sync
 
-EXPOSE 80
+EXPOSE 8080

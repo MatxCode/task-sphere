@@ -7,23 +7,16 @@
     }
 }
 
-:80 {
+:8080g {
     root * /app/public
     encode zstd br gzip
 
-    # Debug: Affiche les headers reçus
     log {
         format console
         level DEBUG
     }
 
-    php_server {
-        root /app/public
-        split .php
-        env PATH /usr/local/bin:/usr/bin:/bin
-        resolve_root_symlink
-    }
+    php_server
 
-    # Désactiver temporairement HTTPS pour tests
-    header ?Strict-Transport-Security "max-age=0"
+    file_server
 }
